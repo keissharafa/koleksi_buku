@@ -78,10 +78,24 @@
 
             {{-- Submit --}}
             <div class="mt-3 d-grid gap-2">
-                <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">
+                <button type="button" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn btn-submit">
                     SIGN IN
                 </button>
             </div>
+
+            {{-- Divider --}}
+<div class="text-center my-3">
+    <small class="text-muted">OR</small>
+</div>
+
+{{-- Google Login --}}
+<div class="d-grid gap-2">
+    <a href="{{ url('/auth/google') }}"
+       class="btn btn-danger btn-lg font-weight-medium">
+        <i class="mdi mdi-google me-2"></i>
+        Login dengan Google
+    </a>
+</div>
 
             {{-- Register Link --}}
             <div class="text-center mt-4 fw-light">
@@ -92,4 +106,33 @@
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    const btn = document.querySelector(".auth-form-btn");
+
+    btn.addEventListener("click", function(){
+
+        let form = btn.closest("form");
+
+        // cek validasi HTML5
+        if(!form.checkValidity()){
+            form.reportValidity();
+            return;
+        }
+
+        // ubah button jadi spinner
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing in...';
+
+        // disable button agar tidak double submit
+        btn.disabled = true;
+
+        // submit form
+        form.submit();
+
+    });
+
+});
+</script>
 @endsection

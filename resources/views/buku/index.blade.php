@@ -67,6 +67,8 @@
         <!-- SIDEBAR -->
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
             <ul class="nav">
+
+                {{-- Profile --}}
                 <li class="nav-item nav-profile">
                     <a href="#" class="nav-link">
                         <div class="nav-profile-image">
@@ -80,7 +82,8 @@
                         <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
                     </a>
                 </li>
-                
+
+                {{-- Dashboard --}}
                 <li class="nav-item {{ Request::is('home') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('home') }}">
                         <span class="menu-title">Dashboard</span>
@@ -88,6 +91,7 @@
                     </a>
                 </li>
 
+                {{-- Kategori --}}
                 <li class="nav-item {{ Request::is('kategori*') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('kategori.index') }}">
                         <span class="menu-title">Kategori</span>
@@ -95,15 +99,114 @@
                     </a>
                 </li>
 
+                {{-- Buku --}}
                 <li class="nav-item {{ Request::is('buku*') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('buku.index') }}">
                         <span class="menu-title">Buku</span>
                         <i class="mdi mdi-book-open-variant menu-icon"></i>
                     </a>
                 </li>
+
+                {{-- Barang --}}
+                <li class="nav-item {{ Request::is('barang*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('barang.index') }}">
+                        <span class="menu-title">Barang</span>
+                        <i class="mdi mdi-package-variant menu-icon"></i>
+                    </a>
+                </li>
+
+                {{-- Generate PDF --}}
+                <li class="nav-item {{ Request::is('pdf*') ? 'active' : '' }}">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#pdfMenu" aria-expanded="false">
+                        <span class="menu-title">Generate PDF</span>
+                        <i class="fa fa-certificate menu-icon"></i>
+                    </a>
+                    <div class="collapse {{ Request::is('pdf*') ? 'show' : '' }}" id="pdfMenu">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/pdf/sertifikat') }}">
+                                    <i class="fa fa-id-card me-2"></i> Sertifikat
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/pdf/pengumuman') }}">
+                                    <i class="fa fa-envelope me-2"></i> Pengumuman
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                {{-- Wilayah --}}
+                <li class="nav-item {{ Request::is('wilayah') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/wilayah') }}">
+                        <span class="menu-title">Wilayah</span>
+                        <i class="mdi mdi-map menu-icon"></i>
+                    </a>
+                </li>
+
+                {{-- Wilayah (Axios) --}}
+                <li class="nav-item {{ Request::is('wilayah-axios') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/wilayah-axios') }}">
+                        <span class="menu-title">Wilayah (Axios)</span>
+                        <i class="mdi mdi-map-outline menu-icon"></i>
+                    </a>
+                </li>
+
+                {{-- Penjualan --}}
+                <li class="nav-item {{ Request::is('penjualan') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/penjualan') }}">
+                        <span class="menu-title">Penjualan</span>
+                        <i class="mdi mdi-cart menu-icon"></i>
+                    </a>
+                </li>
+
+                {{-- Penjualan (Axios) --}}
+                <li class="nav-item {{ Request::is('penjualan-axios') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/penjualan-axios') }}">
+                        <span class="menu-title">Penjualan (Axios)</span>
+                        <i class="mdi mdi-cart-outline menu-icon"></i>
+                    </a>
+                </li>
+
+                {{-- Praktikum JS --}}
+                <li class="nav-item {{ Request::is('modul4*') ? 'active' : '' }}">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#praktikumMenu" aria-expanded="false">
+                        <span class="menu-title">Praktikum JS</span>
+                        <i class="mdi mdi-code-tags menu-icon"></i>
+                    </a>
+                    <div class="collapse {{ Request::is('modul4*') ? 'show' : '' }}" id="praktikumMenu">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/modul4/barang-table') }}">
+                                    <i class="mdi mdi-table me-2"></i> HTML Table
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/modul4/barang-datatable') }}">
+                                    <i class="mdi mdi-database me-2"></i> DataTables
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/modul4/kota') }}">
+                                    <i class="mdi mdi-map-marker me-2"></i> Kota
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                {{-- Barcode Reader --}}
+                <li class="nav-item {{ Request::is('barcode-reader') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/barcode-reader') }}">
+                        <span class="menu-title">Barcode Reader</span>
+                        <i class="fa fa-barcode menu-icon"></i>
+                    </a>
+                </li>
+
             </ul>
         </nav>
-
+        
         <!-- MAIN PANEL -->
         <div class="main-panel">
             <div class="content-wrapper">
@@ -122,7 +225,7 @@
                                 </div>
 
                                 <!-- FORM TAMBAH -->
-                                <form action="{{ route('buku.store') }}" method="POST" class="mb-4">
+                                <form id="formTambahBuku" action="{{ route('buku.store') }}" method="POST" class="mb-4">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-2">
@@ -145,7 +248,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-2">
-                                            <button type="submit" class="btn btn-gradient-primary w-100">
+                                            <button type="button" id="btnTambahBuku" class="btn btn-gradient-primary w-100">
                                                 + Tambah
                                             </button>
                                         </div>
@@ -179,10 +282,11 @@
     </td>
     <td>
         <!-- EDIT -->
-        <a href="{{ route('buku.edit', $b->idbuku) }}"
-           class="btn btn-warning btn-sm">
-            Edit
-        </a>
+        <button type="button"
+            class="btn btn-warning btn-sm btnEditBuku"
+            data-url="{{ route('buku.edit', $b->idbuku) }}">
+                Edit
+        </button>
 
         <!-- DELETE -->
         <form action="{{ route('buku.destroy', $b->idbuku) }}"
@@ -190,11 +294,11 @@
               class="d-inline">
             @csrf
             @method('DELETE')
-            <button type="submit"
-                    class="btn btn-danger btn-sm"
-                    onclick="return confirm('Yakin ingin menghapus buku ini?')">
-                Hapus
-            </button>
+<button type="button"
+        class="btn btn-danger btn-sm btnDeleteBuku"
+        onclick="return confirm('Yakin ingin menghapus buku ini?')">
+    Hapus
+</button>
         </form>
     </td>
 </tr>
@@ -234,5 +338,82 @@
 <script src="{{ asset('assets/js/settings.js') }}"></script>
 <script src="{{ asset('assets/js/todolist.js') }}"></script>
 
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+/* =========================
+   TAMBAH BUKU
+========================= */
+
+const btnTambah = document.getElementById("btnTambahBuku");
+const formTambah = document.getElementById("formTambahBuku");
+
+btnTambah.addEventListener("click", function(){
+
+    if(!formTambah.checkValidity()){
+        formTambah.reportValidity();
+        return;
+    }
+
+    btnTambah.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
+    btnTambah.disabled = true;
+
+    setTimeout(function(){
+        formTambah.submit();
+    },300);
+
+});
+
+
+/* =========================
+   DELETE BUKU
+========================= */
+
+document.querySelectorAll(".btnDeleteBuku").forEach(function(btn){
+
+    btn.addEventListener("click", function(){
+
+        const form = btn.closest("form");
+
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menghapus...';
+        btn.disabled = true;
+
+        setTimeout(function(){
+            form.submit();
+        },300);
+
+    });
+
+});
+
+});
+
+</script>
+
+<script>
+
+/* =========================
+   EDIT BUKU
+========================= */
+
+document.querySelectorAll(".btnEditBuku").forEach(function(btn){
+
+    btn.addEventListener("click", function(){
+
+        const url = btn.dataset.url;
+
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Membuka...';
+        btn.disabled = true;
+
+        setTimeout(function(){
+            window.location.href = url;
+        },300);
+
+    });
+
+});
+
+</script>
 </body>
 </html>

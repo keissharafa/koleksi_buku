@@ -116,7 +116,7 @@
                                         </div>
                                     @endif
 
-                                    <form action="{{ route('kategori.store') }}" method="POST">
+                                    <form id="formTambahKategori" action="{{ route('kategori.store') }}" method="POST">
                                         @csrf
                                         
                                         <div class="form-group">
@@ -125,10 +125,11 @@
                                                    name="nama_kategori" 
                                                    class="form-control" 
                                                    value="{{ old('nama_kategori') }}"
-                                                   placeholder="Masukkan nama kategori">
+                                                   placeholder="Masukkan nama kategori"
+                                                   required>
                                         </div>
 
-                                        <button type="submit" class="btn btn-gradient-primary me-2">
+                                        <button type="button" class="btn btn-gradient-primary me-2 btn-submit">
                                             Simpan
                                         </button>
                                         <a href="{{ route('kategori.index') }}" 
@@ -159,5 +160,38 @@
     <script src="{{ asset('assets/vendors/js/vendor.bundle.base.js') }}"></script>
     <script src="{{ asset('assets/js/off-canvas.js') }}"></script>
     <script src="{{ asset('assets/js/misc.js') }}"></script>
+
+    <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const btn  = document.querySelector(".btn-submit");
+    const form = document.getElementById("formTambahKategori");
+
+    btn.addEventListener("click", function () {
+
+        // cek validasi HTML5
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        // ubah tombol jadi spinner
+        btn.innerHTML =
+            '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
+
+        // disable tombol supaya tidak double submit
+        btn.disabled = true;
+
+        // submit form
+        setTimeout(function () {
+            form.submit();
+        }, 300);
+
+    });
+
+});
+
+</script>
 </body>
 </html>

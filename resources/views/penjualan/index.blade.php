@@ -2,19 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Purple Admin</title>
+    <title>Penjualan Axios</title>
 
     <link rel="stylesheet" href="{{ asset('assets/vendors/mdi/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendors/ti-icons/css/themify-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/css/vendor.bundle.base.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendors/font-awesome/css/font-awesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
 </head>
 
 <body>
+
 <div class="container-scroller">
 
     <!-- NAVBAR -->
@@ -55,7 +51,6 @@
         </div>
     </nav>
 
-    <!-- PAGE BODY -->
     <div class="container-fluid page-body-wrapper">
 
         <!-- SIDEBAR -->
@@ -198,13 +193,6 @@
                     </a>
                 </li>
 
-                <li class="nav-item {{ Request::is('kunjungan-toko') ? 'active' : '' }}">
-    <a class="nav-link" href="{{ url('/kunjungan-toko') }}">
-        <span class="menu-title">Kunjungan Toko</span>
-        <i class="fa fa-map-marker menu-icon"></i>
-    </a>
-</li>
-
             </ul>
         </nav>
 
@@ -212,46 +200,329 @@
         <div class="main-panel">
             <div class="content-wrapper">
 
+                <!-- TITLE -->
                 <div class="page-header">
                     <h3 class="page-title">
                         <span class="page-title-icon bg-gradient-primary text-white me-2">
-                            <i class="mdi mdi-home"></i>
+                            <i class="mdi mdi-cart-outline"></i>
                         </span>
-                        Dashboard
+                        Transaksi Penjualan (AJAX JQuery)
                     </h3>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-4 stretch-card grid-margin">
-                        <div class="card bg-gradient-danger card-img-holder text-white">
-                            <div class="card-body">
-                                <img src="{{ asset('assets/images/dashboard/circle.svg') }}" class="card-img-absolute" />
-                                <h4 class="font-weight-normal mb-3">Selamat Datang</h4>
-                                <h2 class="mb-5">{{ Auth::user()->name }}</h2>
-                                <h6 class="card-text">Selamat, anda berhasil login 🎉</h6>
+                <!-- CARD -->
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="row mb-3">
+
+                            <div class="col-md-3">
+                                <label>Kode Barang</label>
+                                <input type="text" id="kode" class="form-control">
                             </div>
+
+                            <div class="col-md-3">
+                                <label>Nama Barang</label>
+                                <input type="text" id="nama" class="form-control" readonly>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label>Harga</label>
+                                <input type="text" id="harga" class="form-control" readonly>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label>Jumlah</label>
+                                <input type="number" id="jumlah" class="form-control" value="1">
+                            </div>
+
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="button" id="btnTambah" class="btn btn-success w-100" disabled>
+                                    Tambah
+                                </button>
+                            </div>
+
                         </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Kode</th>
+                                        <th>Nama</th>
+                                        <th>Harga</th>
+                                        <th>Jumlah</th>
+                                        <th>Subtotal</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="text-end mt-3">
+                            <h4>Total: <span id="total">0</span></h4>
+                        </div>
+
+                        <div class="text-end">
+                            <button type="button" id="btnBayar" class="btn btn-primary mt-2">
+                                Bayar
+                            </button>
+                        </div>
+
                     </div>
                 </div>
 
             </div>
-
-            <footer class="footer">
-                <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                    <span class="text-muted text-center d-block">
-                        Copyright &copy; {{ date('Y') }}
-                    </span>
-                </div>
-            </footer>
-
         </div>
+
     </div>
 </div>
 
+<!-- JS -->
 <script src="{{ asset('assets/vendors/js/vendor.bundle.base.js') }}"></script>
-<script src="{{ asset('assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('assets/js/off-canvas.js') }}"></script>
 <script src="{{ asset('assets/js/misc.js') }}"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+$(document).ready(function() {
+
+    // 🔥 GET BARANG - AJAX jQuery
+    $('#kode').on('keydown', function(e) {
+        if (e.key === 'Enter') {
+
+            e.preventDefault();
+
+            let kode = $(this).val().trim();
+
+            if (!kode) return;
+
+            $.ajax({
+                url: '/get-barang/' + kode,
+                method: 'GET',
+
+                success: function(res) {
+                    $('#nama').val(res.nama);
+                    $('#harga').val(res.harga);
+                    $('#jumlah').val(1);
+
+                    $('#btnTambah').prop('disabled', false);
+                },
+
+                error: function() {
+                    Swal.fire('Error', 'Barang tidak ditemukan', 'error');
+                    $('#btnTambah').prop('disabled', true);
+                }
+            });
+        }
+    });
+
+
+    // 🔥 TAMBAH
+    $('#btnTambah').on('click', function() {
+
+        let kode = $('#kode').val().trim();
+        let nama = $('#nama').val().trim();
+        let harga = Number($('#harga').val());
+        let jumlah = Number($('#jumlah').val());
+
+        if (!kode || !nama || !harga || !jumlah) {
+            Swal.fire('Warning', 'Data belum lengkap!', 'warning');
+            return;
+        }
+
+        let subtotal = harga * jumlah;
+
+        let existing = $(`tr[data-kode="${kode}"]`);
+
+        if (existing.length > 0) {
+
+            let qty = Number(existing.find('.jumlah').text()) + jumlah;
+
+            existing.find('.jumlah').text(qty);
+            existing.find('.subtotal').text(qty * harga);
+
+        } else {
+
+let row = `
+    <tr data-kode="${kode}">
+        <td>${kode}</td>
+        <td>${nama}</td>
+        <td class="harga">${harga}</td>
+        <td class="jumlah">${jumlah}</td>
+        <td class="subtotal">${subtotal}</td>
+        <td>
+            <button type="button" class="btn btn-warning btn-sm btnEdit">Edit</button>
+            <button type="button" class="btn btn-danger btn-sm btnHapus">Hapus</button>
+        </td>
+    </tr>
+`;
+
+            $('#tableBody').append(row);
+        }
+
+        updateTotal();
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Ditambahkan',
+            timer: 800,
+            showConfirmButton: false
+        });
+
+        $('#kode').val('');
+        $('#nama').val('');
+        $('#harga').val('');
+        $('#jumlah').val(1);
+        $('#btnTambah').prop('disabled', true);
+    });
+
+
+    // 🔥 HAPUS
+    $(document).on('click', '.btnHapus', function() {
+
+        let row = $(this).closest('tr');
+
+        Swal.fire({
+            title: 'Yakin?',
+            icon: 'warning',
+            showCancelButton: true
+        }).then(function(res) {
+            if (res.isConfirmed) {
+                row.remove();
+                updateTotal();
+            }
+        });
+    });
+
+
+    // 🔥 EDIT JUMLAH
+    $(document).on('click', '.btnEdit', function() {
+
+        let row = $(this).closest('tr');
+
+        let kode = row.children().eq(0).text();
+        let nama = row.children().eq(1).text();
+        let harga = Number(row.find('.harga').text());
+        let jumlahLama = Number(row.find('.jumlah').text());
+
+        Swal.fire({
+            title: 'Edit Jumlah Barang',
+            html: `
+                <div style="text-align:left">
+                    <label>Kode Barang</label>
+                    <input class="swal2-input" value="${kode}" readonly>
+
+                    <label>Nama Barang</label>
+                    <input class="swal2-input" value="${nama}" readonly>
+
+                    <label>Jumlah</label>
+                    <input id="editJumlah" type="number" class="swal2-input" value="${jumlahLama}" min="1">
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Simpan',
+            cancelButtonText: 'Batal',
+            preConfirm: function() {
+                let jumlahBaru = Number($('#editJumlah').val());
+
+                if (jumlahBaru <= 0 || isNaN(jumlahBaru)) {
+                    Swal.showValidationMessage('Jumlah harus lebih dari 0');
+                    return false;
+                }
+
+                return jumlahBaru;
+            }
+        }).then(function(result) {
+            if (result.isConfirmed) {
+
+                let jumlahBaru = result.value;
+
+                row.find('.jumlah').text(jumlahBaru);
+                row.find('.subtotal').text(harga * jumlahBaru);
+
+                updateTotal();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Jumlah barang berhasil diubah',
+                    timer: 1000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    });
+
+
+    // 🔥 BAYAR - AJAX jQuery
+    $('#btnBayar').on('click', function() {
+
+        let data = [];
+
+        $('#tableBody tr').each(function() {
+            data.push({
+                kode: $(this).children().eq(0).text(),
+                jumlah: Number($(this).find('.jumlah').text()),
+                subtotal: Number($(this).find('.subtotal').text())
+            });
+        });
+
+        let total = Number($('#total').text());
+
+        if (data.length === 0) {
+            Swal.fire('Warning', 'Belum ada transaksi!', 'warning');
+            return;
+        }
+
+        Swal.fire({
+            title: 'Loading...',
+            allowOutsideClick: false,
+            didOpen: function() {
+                Swal.showLoading();
+            }
+        });
+
+        $.ajax({
+            url: '/penjualan/store',
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                data: data,
+                total: total
+            },
+
+            success: function() {
+                Swal.fire('Berhasil', 'Transaksi disimpan', 'success');
+
+                $('#tableBody').html('');
+                $('#total').text(0);
+            },
+
+            error: function(err) {
+                console.log(err);
+                Swal.fire('Error', 'Gagal simpan', 'error');
+            }
+        });
+    });
+
+
+    // 🔥 TOTAL
+    function updateTotal() {
+        let total = 0;
+
+        $('.subtotal').each(function() {
+            total += Number($(this).text());
+        });
+
+        $('#total').text(total);
+    }
+
+});
 </script>
+
 </body>
 </html>
